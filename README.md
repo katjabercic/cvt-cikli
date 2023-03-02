@@ -26,3 +26,4 @@ Literatura:
 
 * `test.py` samo šteje cikle, ki vsebujejo vozlišče $0$, za vsak prvi graf nekega reda. Pri redu $46$ približno cca 20 minut.
 * `gv_mod.py` iz izvornih podatkov pridobi tiste grafe, ki imajo ustrezen red stabilizatorja.
+* `cvt-100.csv`: grafi do $100$ vozlišč.
