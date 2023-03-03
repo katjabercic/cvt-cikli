@@ -19,7 +19,6 @@ with open('cvt-1000-girth-6-7-8-not-mod-3.csv') as fin:
             print(report)
             fh.write(report)
 
-
     # select graph.'order', graph_cvt.cvt_index, graph.data
 # from
 # 	graph inner join graph_cvt 

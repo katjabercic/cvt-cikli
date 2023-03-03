@@ -27,3 +27,42 @@ Literatura:
 * `test.py` samo šteje cikle, ki vsebujejo vozlišče $0$, za vsak prvi graf nekega reda. Pri redu $46$ približno cca 20 minut.
 * `gv_mod.py` iz izvornih podatkov pridobi tiste grafe, ki imajo ustrezen red stabilizatorja.
 * `cvt-100.csv`: grafi do $100$ vozlišč.
+
+Nove datoteke:
+- `johnson.py`: kopija implementacije algoritma iz nx, a rahlo zoptimitirana (ne kopiramo vsakič cikla, le 
+  prvi dve vozlišči) in prirejena (namesto `list(set(...)` dodam `sorted(set(...))`, da lahko prej prekinemo for zanko)
+- `stuff.py`: dve pomožni funkciji (naloži grafe, naredi _kao lep_ loger)
+- `prvi_poskus.py`: temelji na Ideja 1 (Glej spodaj)
+
+
+## Ideja 1
+
+Imamo graf `G(V, E)`.
+
+1. Najdemo "različni" povezavi, tj. povezavi, ki imata v (še vedno neusmerjenem) [grafu povezav](https://en.wikipedia.org/wiki/Line_graph)
+   različni (neizomorfni) okolici vozlišč, ki so od njiju oddaljene največ `r`.
+   - Želimo, da sta ti povezavi oblike `(x, y)` in `(x, z)` (kjer so `x, y, z` vozlišča iz `V`), tj. imata skupno
+     vozlišče, saj bomo kasneje šteli cikle iz nekega vozlišča
+   - Ker je to prvi poskus, sem iskal `x = 0` in morda se najde pri kakšnem drugem manjši polmer
+2. Zagotovimo si, da pri DFS v Johnsonovem algoritmu vozlišči `y` in `z` prideta na sklad na koncu (zato, da sta prvi
+   `pop()`-njeni in lahko zgodaj brejknemo)
+3. Štejemo cikle.
+
+### Trenutno stanje
+
+Prvih 40 grafov v cca. toliko minutah (na 7 let starem prenosniku).
+
+### Možnosti za izboljšavo:
+
+1. Implementacija:
+    - nx implementaicja (in njena rahlo našim potrebam priredba) je zelo daleč od neučinkovite
+    - `numba` (in bolj osnovne/čiste strukture) za začetek, lahko tudi `c++`
+2. Algoritem:
+    - Denimo, da sta polmera okolic `r`. Ali je dovolj gledati cikle dolžine `<= k(r)` (cca. `k = 2r` je videti ok meja)
+    - Ali je dovolj gledati graf, ki vsebuje vozlišča iz unije teh okolic? (morda vsebuje veliko manj vozlišč)
+    - Ali lahko prirežemo Johnsonov algoritem (tako, da ne nalagamo na sklad, če je trenutna pot že dovolj dolga)?
+    - Ali lahko spremenimo Johnsona v iskanje v širino? (malo dvomim, ampak tako bi najprej dobili kratke cikle)
+
+Pri algoritmičnih izboljšavah gre predvsem zato, da je krajših ciklov veliiiiko manj kot dolgih.
+   
+
