@@ -34,6 +34,12 @@ Nove datoteke:
 - `stuff.py`: dve pomožni funkciji (naloži grafe, naredi _kao lep_ loger)
 - `prvi_poskus.py`: temelji na Ideja 1 (Glej spodaj)
 
+Datoteke na OneDrive-u:
+
+- `cvt-1000-girth-6-7-8-not-mod-3.csv`: `order`, `sparse6`
+- cvt-info-1000-girth-6-7-8-not-mod-3.csv: `order`, `cvt_id`, `girth`, `mod3`, `sparse6`
+
+`order` je red grafa, `cvt_id` skupaj z redom tvori ID grafa v cenzusu: $(n, i)$, `mod3` je ostanek pri deljenju s $3$, `sparse6` pa je zapis grafa v tem formatu.
 
 ## Ideja 1
 
@@ -55,7 +61,7 @@ Prvih 40 grafov v cca. toliko minutah (na 7 let starem prenosniku).
 ### Možnosti za izboljšavo:
 
 1. Implementacija:
-    - nx implementaicja (in njena rahlo našim potrebam priredba) je zelo daleč od neučinkovite
+    - nx implementacija (in njena mini priredba našim potrebam je zelo daleč od učinkovite
     - `numba` (in bolj osnovne/čiste strukture) za začetek, lahko tudi `c++`
 2. Algoritem:
     - Denimo, da sta polmera okolic `r`. Ali je dovolj gledati cikle dolžine `<= k(r)` (cca. `k = 2r` je videti ok meja)
