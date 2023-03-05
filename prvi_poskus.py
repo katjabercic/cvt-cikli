@@ -94,9 +94,6 @@ def solve(graph: nx.Graph):
     r, v1, v2 = find_spurious_edge(graph)
     LOGGER.info(f"nodes: {graph.order()}; r = {r} ({v1} and {v2})")
     graph_relabeled, v1, v2 = relabel_graph(graph, v1, v2)
-
-
-
     counts = {}  # {k: {v: count, ...}, ...}  for cycles starting at 0 and continuing at v
     other_counts = {}
     total_count = 0

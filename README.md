@@ -64,5 +64,3 @@ Prvih 40 grafov v cca. toliko minutah (na 7 let starem prenosniku).
     - Ali lahko spremenimo Johnsona v iskanje v širino? (malo dvomim, ampak tako bi najprej dobili kratke cikle)
 
 Pri algoritmičnih izboljšavah gre predvsem zato, da je krajših ciklov veliiiiko manj kot dolgih.
-   
-
