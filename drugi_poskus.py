@@ -3,7 +3,7 @@ import queue
 import numpy as np
 
 from stuff import convert_to_nx, create_logger
-from prvi_poskus import find_spurious_edge
+from johnson import simple_cycles_my
 
 
 LOGGER = create_logger(__file__)
@@ -46,78 +46,61 @@ def decode(s_code):
     return present
 
 
-def is_regular(graph: nx.Graph, is_test: bool = False):
+def is_regular(graph: nx.Graph, is_test: bool = False, the_node: int = 0):
     matrix = nx_to_matrix(graph, is_test)
     n = len(matrix)
     q = queue.SimpleQueue()
-    q.put((0, 1, 1))     # (node, subset code, length): length odvec, ampak ok ...
-    neighbours = sorted(graph[0])
+    q.put((the_node, 1 << the_node, 1))     # (node, subset code, length): length odvec, ampak ok ...
+    neighbours = sorted(graph[the_node])
     neighbour_to_index = {x: i for i, x in enumerate(neighbours)}
     counts = np.zeros((n + 1, len(neighbours)))  # n x 3
     last_cycle_length = 0
     iterations = 0
     answer = True
-    max_q_size = 1
-    while not q.empty():
-        q_s = q.qsize()
-        if q_s > max_q_size:
-            LOGGER.debug(f"   Max q_size: {q_s}")
-            max_q_size *= 2
+    while not q.empty() and iterations < 10**8:
         iterations += 1
         node, subset, length = q.get_nowait()
-        # print("Processing", node, decode(subset))
         if node in neighbours and length > 2:
             if length > last_cycle_length and min(counts[last_cycle_length]) < max(counts[last_cycle_length]):
+                # testirano na if False and (pogoj zgoraj)
                 answer = False
                 break
             i = neighbour_to_index[node]
             counts[length, i] += 1
             last_cycle_length = length
-            # print("    Found cycle: ", decode(subset))
         for neighbour in matrix[node]:
-            n_code = 1 << neighbour  # neighbour code: 2 ** i
+            n_code = 1 << neighbour  # i.e., n_code = 2 ** i
             if n_code & subset:
                 continue
-            # print("    Adding ", neighbour)
             q.put((neighbour, subset | n_code, length + 1))
-        if iterations % 10 ** 6 == 0:
-            LOGGER.info(f"        iterations: {iterations}, length: {length}")
-        if iterations > 10**8:
-            LOGGER.info("BREAKING AFTER MANY ...")
-            break
-    LOGGER.info(f"   After {iterations} iterations: {answer} (last length: {last_cycle_length})")
-    return answer
+    LOGGER.info(f"After {iterations} iterations ({counts.sum()} cycles): {answer} (last length: {last_cycle_length})")
+    return answer, last_cycle_length, counts
 
 
-def simple_test():
-    """
-                  5     ------------
-               /     \\            |
-              0  ...  1            |
-              .       .            |
-              .   /   .            |
-              2  ...  3            |
-               \\    /             |
-                  4 ---------------|
+def better_test_single(graph: nx.Graph):
+    answer, last_cycle_length, counts = is_regular(graph)
+    directed_version = graph.to_directed()
+    all_cycles = list((length, part) for length, part in simple_cycles_my(directed_version) if length > 2 and part[0] == 0)
+    counts_from_johnson = np.zeros((last_cycle_length + 1, 3), dtype=int)
+    node_to_index = dict(zip(graph[0], range(3)))
+    for length, part in all_cycles:
+        if length > last_cycle_length:
+            continue
+        i = node_to_index[part[1]]
+        counts_from_johnson[length, i] += 1
+    for i in range(last_cycle_length + 1):
+        truth = sorted(counts_from_johnson[i])
+        maybe = sorted(counts[i])
+        assert len(truth) == len(maybe) == 3, (truth, maybe)
+        for x, y in zip(truth, maybe):
+            if abs(x - y) > 0.5:
+                raise ValueError(f"Length {i}: {truth}, {maybe}")
 
 
-    :return:
-    """
-    g = nx.Graph()
-    g.add_edge(0, 1)
-    g.add_edge(0, 2)
-    g.add_edge(0, 5)
-    g.add_edge(1, 2)
-    g.add_edge(1, 3)
-    g.add_edge(1, 5)
-    g.add_edge(2, 3)
-    g.add_edge(2, 4)
-    g.add_edge(3, 4)
-    g.add_edge(4, 5)
-
-    assert not is_regular(g, True)
-    g = nx.icosahedral_graph()
-    assert is_regular(g, True)
+def better_test():
+    graphs = convert_to_nx()
+    for graph in graphs:
+        better_test_single(graph)
 
 
 def solve_all():
@@ -125,9 +108,9 @@ def solve_all():
     for i, g in enumerate(graphs):
         LOGGER.info(f"Graph {i}")
         # LOGGER.info(f"Spurious edge: {find_spurious_edge(g)}")
-        is_regular(g)
+        answer = is_regular(g, the_node=0)
 
 
 if __name__ == '__main__':
-    # simple_test()
-    solve_all()
+    # solve_all()
+    better_test()
