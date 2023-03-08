@@ -13,9 +13,15 @@ za vsak $k$ med $3$ in številom vozlišč grafa je število ciklov dolžine $k$
 
 Naloga je poiskati primere ciklično regularnih grafov. To med drugim pomeni, da lahko s preiskovanjem nehamo takoj, ko se števili ciklov neke dolžine pri dveh od povezav ne ujemata.
 
+Primožev komentar: 
+
+> Za 6 domnevam, da jih ni, pri 7 ali 8 pa bi po mojem morali najti kake primere. Skratka, program, ki tole pregleda do, recimo, 1.000 vozlišč v enem tednu, prejme nagrado (ne samo simbolično). Če je 1.000 preveč, potem bom zadovoljen do manj (sam znam narediti do 400). Skratka, čim dlje.
+
+
 ## Orodja in literatura
 
 * knjižnica `networkx`.
+* SageMath se uporabi za preverjanje povezavne tranzitivnosti. Če ga imate že nameščenega, je treba virtualno okolje narediti s Pythonom, ki pride v paketu: `sage -python -m venv venv`.
 
 Literatura:
 
@@ -70,3 +76,28 @@ Prvih 40 grafov v cca. toliko minutah (na 7 let starem prenosniku).
     - Ali lahko spremenimo Johnsona v iskanje v širino? (malo dvomim, ampak tako bi najprej dobili kratke cikle)
 
 Pri algoritmičnih izboljšavah gre predvsem zato, da je krajših ciklov veliiiiko manj kot dolgih.
+
+
+## Podatki
+
+Poizvedba na DiscreteZOO bazi, s katero dobimo prvi nabor grafov:
+
+```
+select graph.'order', graph_cvt.cvt_index, graph.data, 
+from
+	graph inner join graph_cvt 
+	on graph.zooid = graph_cvt.zooid
+where
+	graph.'order' <= 1000 and
+	graph.is_vertex_transitive and
+	not graph.is_edge_transitive and
+	graph_cvt.cvt_index is not null and
+	graph.girth >= 6 and
+	graph.girth <=8
+```
+
+Na tej točki še ne upoštevamo pogoja, da red stabilizatorja vozlišča NI deljiv s 3.
+Podatki o stabilizatorju so v datoteki `Census3valentVTproperties.csv` (prečiščeno iz tistega, kar je poslal Primož).
+Skripta `gv-mod.py` izpiše datoteko s podatkom o modulu.
+
+Novo dobljeno datoteko se za zdaj uvozi v DiscreteZOO bazo, naredi `join` po prvih dveh stolpcih in novo poizvedbo za samo tiste grafe, ki imajo ustrezen ostanek pri deljenju.
