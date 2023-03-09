@@ -37,7 +37,7 @@ Nove datoteke:
 Datoteke na OneDrive-u:
 
 - `cvt-1000-girth-6-7-8-not-mod-3.csv`: `order`, `sparse6`
-- cvt-info-1000-girth-6-7-8-not-mod-3.csv: `order`, `cvt_id`, `girth`, `mod3`, `sparse6`
+- `cvt-info-1000-girth-6-7-8-not-mod-3.csv`: `order`, `cvt_id`, `girth`, `mod3`, `sparse6`
 
 `order` je red grafa, `cvt_id` skupaj z redom tvori ID grafa v cenzusu: $(n, i)$, `mod3` je ostanek pri deljenju s $3$, `sparse6` pa je zapis grafa v tem formatu.
 
