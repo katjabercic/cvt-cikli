@@ -1,6 +1,7 @@
 import networkx as nx
 import queue
 import numpy as np
+from typing import Optional
 
 from stuff import convert_to_nx, create_logger
 from johnson import simple_cycles_my
@@ -9,7 +10,7 @@ from johnson import simple_cycles_my
 LOGGER = create_logger(__file__)
 
 
-def nx_to_matrix(g: nx.Graph, is_test: bool):
+def nx_to_matrix(g: nx.Graph):
     max_degree = max(len(g[node]) for node in g)
     if max_degree != 3:
         # test
@@ -28,10 +29,7 @@ def nx_to_matrix(g: nx.Graph, is_test: bool):
     for j, row in enumerate(m):
         for i in range(len(row)):
             if row[i] < 0:
-                if is_test:
-                    row[i] = j  # samososed: vedno bo prisoten v verigi -> nikoli dodan
-                else:
-                    raise ValueError("!?")
+                row[i] = j  # samososed: vedno bo prisoten v verigi -> nikoli dodan
     return m
 
 
@@ -46,8 +44,10 @@ def decode(s_code):
     return present
 
 
-def is_regular(graph: nx.Graph, is_test: bool = False, the_node: int = 0):
-    matrix = nx_to_matrix(graph, is_test)
+def is_regular(graph: nx.Graph, is_test: bool = False, the_node: int = 0, max_cycle: Optional[int] = None):
+    if max_cycle is None:
+        max_cycle = graph.order()
+    matrix = nx_to_matrix(nx.ego_graph(graph, the_node, radius=max_cycle // 2))
     n = len(matrix)
     q = queue.SimpleQueue()
     q.put((the_node, 1 << the_node, 1))     # (node, subset code, length): length odvec, ampak ok ...
@@ -61,8 +61,9 @@ def is_regular(graph: nx.Graph, is_test: bool = False, the_node: int = 0):
         iterations += 1
         node, subset, length = q.get_nowait()
         if node in neighbours and length > 2:
-            if length > last_cycle_length and min(counts[last_cycle_length]) < max(counts[last_cycle_length]):
-                # testirano na if False and (pogoj zgoraj)
+            if (not is_test) and \
+                    length > last_cycle_length and \
+                    min(counts[last_cycle_length]) < max(counts[last_cycle_length]):
                 answer = False
                 break
             i = neighbour_to_index[node]
