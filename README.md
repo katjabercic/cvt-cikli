@@ -31,8 +31,12 @@ Literatura:
 Nove datoteke:
 - `johnson.py`: kopija implementacije algoritma iz nx, a rahlo zoptimitirana (ne kopiramo vsakič cikla, le 
   prvi dve vozlišči) in prirejena (namesto `list(set(...)` dodam `sorted(set(...))`, da lahko prej prekinemo for zanko)
-- `stuff.py`: dve pomožni funkciji (naloži grafe, naredi _kao lep_ loger)
+- `stuff.py`: pomožne funkciji (naloži grafe, naredi _kao lep_ loger)
 - `prvi_poskus.py`: temelji na Ideja 1 (Glej spodaj)
+- `drugi_poskus.py`: BFS, ki se prekine, ko se lahko
+
+Predpostavljamo, da je lokalno prisoten tudi `cvt-info-1000-girth-6-7-8-not-mod-3.csv`
+(z `,` kot ločilom in z glavo - glej `stuff.py`).
 
 Datoteke na OneDrive-u:
 
@@ -56,7 +60,9 @@ Imamo graf `G(V, E)`.
 
 ### Trenutno stanje
 
-Prvih 40 grafov v cca. toliko minutah (na 7 let starem prenosniku).
+1. `prvi_poskus`: Prvih 40 grafov v cca. toliko minutah (na 7 let starem prenosniku).
+2. `drugi_poskus`: Vse male grafe (in "očitno" neregularne zelo hitro) 
+
 
 ### Možnosti za izboljšavo:
 
@@ -70,3 +76,8 @@ Prvih 40 grafov v cca. toliko minutah (na 7 let starem prenosniku).
     - Ali lahko spremenimo Johnsona v iskanje v širino? (malo dvomim, ampak tako bi najprej dobili kratke cikle)
 
 Pri algoritmičnih izboljšavah gre predvsem zato, da je krajših ciklov veliiiiko manj kot dolgih.
+
+## Rezultati
+
+V `cvt-info-1000<idt itd>_filtering_level1.csv` so prisotni prvi rezultati.
+`is_regular` stolpec je resnica, če je tam `False`, `True` je pa treba dojeti kot _Ni dokaza, ki bi rekel drugače._

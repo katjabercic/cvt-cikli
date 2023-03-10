@@ -2,7 +2,7 @@ import networkx as nx
 import queue
 import numpy as np
 
-from stuff import convert_to_nx, create_logger
+from stuff import convert_to_nx_simple, create_logger, convert_to_nx
 from johnson import simple_cycles_my
 
 
@@ -73,7 +73,6 @@ def is_regular(graph: nx.Graph, is_test: bool = False, the_node: int = 0):
             if n_code & subset:
                 continue
             q.put((neighbour, subset | n_code, length + 1))
-    LOGGER.info(f"After {iterations} iterations ({counts.sum()} cycles): {answer} (last length: {last_cycle_length})")
     return answer, last_cycle_length, counts
 
 
@@ -98,19 +97,22 @@ def better_test_single(graph: nx.Graph):
 
 
 def better_test():
-    graphs = convert_to_nx()
+    graphs = convert_to_nx_simple()
     for graph in graphs:
         better_test_single(graph)
 
 
 def solve_all():
-    graphs = convert_to_nx("cvt-nekaj_velikih.csv")  # "cvt-100.csv"
-    for i, g in enumerate(graphs):
-        LOGGER.info(f"Graph {i}")
-        # LOGGER.info(f"Spurious edge: {find_spurious_edge(g)}")
-        answer = is_regular(g, the_node=0)
+    graphs = convert_to_nx()
+    results_file = "cvt-info-1000-girth-6-7-8-not-mod-3_filtering_level1.csv"
+    with open(results_file, "w", encoding="utf-8") as f:
+        print("order,cvt_id,is_regular,last_cycle_length")
+        for i, ((order, cvt_id), g) in enumerate(graphs):
+            LOGGER.info(f"Graph {i}")
+            answer, last_cycle_length, _ = is_regular(g, the_node=0)
+            print(f"{order},{cvt_id},{answer},{last_cycle_length}", file=f)
 
 
 if __name__ == '__main__':
-    # solve_all()
-    better_test()
+    solve_all()
+    # better_test()
