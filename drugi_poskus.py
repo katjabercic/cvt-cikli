@@ -15,7 +15,7 @@ def nx_to_matrix(g: nx.Graph):
     if max_degree != 3:
         # test
         LOGGER.warning(f"Max degree of g is {max_degree}")
-    m = [[-1 for _ in range(max_degree)] for _ in range(g.order())]
+    m = [[-1 for _ in range(max_degree)] for _ in range(max(g.nodes) + 1)]
     for x, y in g.edges:
         i = 0
         while m[x][i] >= 0:
@@ -29,7 +29,9 @@ def nx_to_matrix(g: nx.Graph):
     for j, row in enumerate(m):
         for i in range(len(row)):
             if row[i] < 0:
-                row[i] = j  # samososed: vedno bo prisoten v verigi -> nikoli dodan
+                # samososed: vedno bo prisoten v verigi -> nikoli dodan
+                # to je pomembno, ce prirezemo: graf neha biti regularen
+                row[i] = j
     return m
 
 
@@ -74,11 +76,13 @@ def is_regular(graph: nx.Graph, is_test: bool = False, the_node: int = 0, max_cy
             if n_code & subset:
                 continue
             q.put((neighbour, subset | n_code, length + 1))
+    if is_test:
+        LOGGER.info(f"Finished after {iterations} (cycles: {np.sum(counts)}) with last lengh: {last_cycle_length}")
     return answer, last_cycle_length, counts
 
 
 def better_test_single(graph: nx.Graph):
-    answer, last_cycle_length, counts = is_regular(graph)
+    answer, last_cycle_length, counts = is_regular(graph, is_test=False, max_cycle=8)
     directed_version = graph.to_directed()
     all_cycles = list((length, part) for length, part in simple_cycles_my(directed_version) if length > 2 and part[0] == 0)
     counts_from_johnson = np.zeros((last_cycle_length + 1, 3), dtype=int)
@@ -100,12 +104,13 @@ def better_test_single(graph: nx.Graph):
 def better_test():
     graphs = convert_to_nx_simple()
     for graph in graphs:
+        LOGGER.info("Next graph")
         better_test_single(graph)
 
 
-def solve_all():
+def solve_all(max_cycle: int):
     graphs = convert_to_nx()
-    results_file = "cvt-info-1000-girth-6-7-8-not-mod-3_filtering_level1.csv"
+    results_file = f"cvt-info-1000-girth-6-7-8-not-mod-3_filtering_level1_{max_cycle}.csv"
     with open(results_file, "w", encoding="utf-8") as f:
         print("order,cvt_id,is_regular,last_cycle_length")
         for i, ((order, cvt_id), g) in enumerate(graphs):
@@ -115,5 +120,5 @@ def solve_all():
 
 
 if __name__ == '__main__':
-    solve_all()
+    solve_all(30)
     # better_test()
