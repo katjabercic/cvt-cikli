@@ -19,20 +19,3 @@ with open('cvt-1000-girth-6-7-8-not-mod-3.csv') as fin:
             print(report)
             fh.write(report)
 
-    # select graph.'order', graph_cvt.cvt_index, graph.data
-# from
-# 	graph inner join graph_cvt 
-# 	on graph.zooid = graph_cvt.zooid
-# where
-# 	graph.'order' <= 1000 and
-# 	graph.is_vertex_transitive and
-# 	not graph.is_edge_transitive and
-# 	graph_cvt.cvt_index is not null and
-# 	graph.girth >= 6 and
-# 	graph.girth <=8
-
-# TODO: red stabilizatorja vozlišča NI deljiv s 3
-# Za 6 domnevam, da jih ni, pri 7 ali 8 pa bi po mojem morali najti kake primere.
-# Skratka, program, ki tole pregleda do, recimo, 1.000 vozlišč v enem tednu, 
-# prejme nagrado (ne samo simbolično). Če je 1.000 preveč, potem bom zadovoljen do 
-#  manj (sam znam narediti do 400). Skratka, čim dlje.
