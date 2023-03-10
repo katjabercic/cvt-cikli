@@ -1,6 +1,7 @@
 
-with open('props.csv') as fin:
-    with open('mod3.csv', 'w') as fout:
+with open('data/Census3valentVTproperties.csv') as fin:
+    with open('data/mod3.csv', 'w') as fout:
+        next(fin) # preskoči glavo
         for l in fin:
             info = l.split(',')
             mod = int(info[-1]) % 3
