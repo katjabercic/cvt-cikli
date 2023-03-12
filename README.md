@@ -21,9 +21,24 @@ Primožev komentar:
 ## Orodja in literatura
 
 * knjižnica `networkx`.
-* SageMath se uporabi za preverjanje povezavne tranzitivnosti. Če ga imate že nameščenega, je treba virtualno okolje narediti s Pythonom, ki pride v paketu: `sage -python -m venv venv`.
 
-Literatura:
+### SageMath
+
+SageMath se uporabi za preverjanje povezavne tranzitivnosti. Če ga imate že nameščenega, je treba virtualno okolje narediti s Pythonom, ki pride v paketu: `sage -python -m venv venv`.
+
+V VSCode je treba izbrati, kateri interpreter se uporablja. Spodaj desno je izpisano na kratko (npr. `'venv': venv` ali `3.9.2 64-bit`). Tam je treba vnesti pot do intepreterja, ki jo dobimo kot spodaj.
+
+```
+sage -python
+Python 2.6.4 (r264:75706, Jun 20 2011, 12:34:18) 
+[GCC 4.2.1 (Apple Inc. build 5664)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import sys
+>>> sys.executable
+'/Users/tjfulle/Local/math/sage/darwin/local/bin/python'
+```
+
+### Literatura:
 
 - [Finding All the Elementary Circuits of a Directed Graph](https://epubs.siam.org/doi/10.1137/0204007), [PDF](https://www.cs.tufts.edu/comp/150GA/homeworks/hw1/Johnson%2075.PDF),
 - [Johnson’s algorithm To find simple cycles in a directed graph](https://medium.com/@Andrew_D./johnsons-algorithm-to-find-simple-cycles-in-a-directed-graph-89d0314b0333).
@@ -84,7 +99,7 @@ Pri algoritmičnih izboljšavah gre predvsem zato, da je krajših ciklov veliiii
 Poizvedba na DiscreteZOO bazi, s katero dobimo prvi nabor grafov:
 
 ```
-select graph.'order', graph_cvt.cvt_index, graph.data, 
+select graph.'order', graph_cvt.cvt_index, graph.data
 from
 	graph inner join graph_cvt 
 	on graph.zooid = graph_cvt.zooid
