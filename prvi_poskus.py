@@ -8,7 +8,7 @@ Ena od povezav v njih je kriva za nesorazmernost ciklov
 
 import networkx as nx
 # import tqdm
-from stuff import convert_to_nx, create_logger
+from stuff import convert_to_nx_simple, create_logger
 from typing import Tuple
 from johnson import simple_cycles_my
 
@@ -145,7 +145,7 @@ def report(counts):
 
 
 def solve_all():
-    graphs = convert_to_nx("cvt-100.csv")
+    graphs = convert_to_nx_simple("cvt-100.csv")
     for i, g in enumerate(graphs):
         LOGGER.info(f"Graph {i}")
         solve(g)
